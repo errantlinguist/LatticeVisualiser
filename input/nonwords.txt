@@ -1,0 +1,14 @@
+eps
+<s>
+</s>
+__pause__
+<airline>
+</airline>
+<altitude>
+</altitude>
+<callsign>
+</callsign>
+</command>
+<command_type="descend">
+<flightnumber>
+</flightnumber>

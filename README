@@ -1,0 +1,12 @@
+MILLENNIUM ASR LATTICE VISUALISER
+---------------------------------------------
+VERSION: 2011-11-28
+AUTHOR: Todd Shore
+WEBSITE: https://github.com/errantlinguist/JWFST
+LICENSING:
+Copyright 2011-2012 Todd Shore. Distributed under the Apache License 2.0 -- See the files "NOTICE" and "LICENSE".
+
+----------------------------------------------
+REQUIREMENTS:
+- Java SE6+
+- Apache Commons CLI 1.2+
