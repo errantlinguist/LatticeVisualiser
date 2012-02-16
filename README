@@ -3,7 +3,7 @@ A visualisation tool for word/phone lattices output by the Millennium ASR system
 ---------------------------------------------
 VERSION: 2011-11-28
 AUTHOR: Todd Shore
-WEBSITE: https://github.com/errantlinguist/JWFST
+WEBSITE: https://github.com/errantlinguist/LatticeVisualiser
 LICENSING:
 Copyright 2011-2012 Todd Shore. Distributed under the Apache License 2.0 -- See the files "NOTICE" and "LICENSE".
 
