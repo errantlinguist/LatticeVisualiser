@@ -10,5 +10,10 @@ Copyright 2011-2012 Todd Shore. Distributed under the Apache License 2.0 -- See 
 ----------------------------------------------
 REQUIREMENTS:
 - Java SE 6+
-- Guava 10.0.1+ (http://code.google.com/p/guava-libraries/)
 - Apache Commons CLI 1.2+ (http://commons.apache.org/cli/)
+- Guava 10.0.1+ (http://code.google.com/p/guava-libraries/)
+- Commons-Collections with Generics 4.01+ (http://sourceforge.net/projects/collections/)
+- The following JARs from the JUNG Framework 2.0.1+ (http://sourceforge.net/projects/jung/):
+	jung-algorithms-2.0.1.jar
+	jung-graph-impl-2.0.1.jar
+	jung-visualization-2.0.1.jar
