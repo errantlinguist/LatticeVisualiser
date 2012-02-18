@@ -15,5 +15,11 @@ REQUIREMENTS:
 - Commons-Collections with Generics 4.01+ (http://sourceforge.net/projects/collections/)
 - The following JARs from the JUNG Framework 2.0.1+ (http://sourceforge.net/projects/jung/):
 	jung-algorithms-2.0.1.jar
+	jung-api-2.0.1.jar
 	jung-graph-impl-2.0.1.jar
 	jung-visualization-2.0.1.jar
+	
+INSTRUCTIONS:
+1. Unpack the archive into a new directory.
+2. To build, run 'ant' in the application home directory, specifying the JAR files required for the above-listed requirements in the property "externaljars" -- e.g. 'ant -Dexternaljars="/usr/share/java/guava.jar:/usr/share/java/commons-cli.jar:lib/collections-generic-4.01.jar:lib/jung-algorithms-2.0.1.jar:lib/jung-graph-impl-2.0.1.jar:lib/jung-visualization-2.0.1.jar"' for a Debian/Ubuntu-style system where the JUNG libraries are locally installed in the directory 'lib'.
+3. For a demo, you can run 'ant demo' with required classpath, e.g. 'ant demo -Dexternaljars="/usr/share/java/guava.jar:/usr/share/java/commons-cli.jar:lib/collections-generic-4.01.jar:lib/jung-algorithms-2.0.1.jar:lib/jung-graph-impl-2.0.1.jar:lib/jung-visualization-2.0.1.jar"'.
