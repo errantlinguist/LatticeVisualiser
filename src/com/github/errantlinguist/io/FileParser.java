@@ -177,19 +177,6 @@ public abstract class FileParser<L, F> extends Parser<String, L, F> {
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + (reader == null ? 0 : reader.hashCode());
-		return result;
-	}
-
 	/**
 	 * 
 	 * @param reader
