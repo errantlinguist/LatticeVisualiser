@@ -150,33 +150,6 @@ public abstract class FileParser<L, F> extends Parser<String, L, F> {
 		return new FileLineReader<L, F>(this);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(final Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (!super.equals(obj)) {
-			return false;
-		}
-		if (!(obj instanceof FileParser)) {
-			return false;
-		}
-		final FileParser<?, ?> other = (FileParser<?, ?>) obj;
-		if (reader == null) {
-			if (other.reader != null) {
-				return false;
-			}
-		} else if (!reader.equals(other.reader)) {
-			return false;
-		}
-		return true;
-	}
-
 	/**
 	 * 
 	 * @param reader

@@ -124,6 +124,11 @@ public class FileLineReader<L, F> {
 	}
 
 	/**
+	 * The pre-cached hash code.
+	 */
+	private final int hashCode;
+
+	/**
 	 * The {@link FileParser} used for parsing the file contents.
 	 */
 	private final FileParser<L, F> parser;
@@ -141,6 +146,46 @@ public class FileLineReader<L, F> {
 	public FileLineReader(final FileParser<L, F> parser) {
 		this.parser = parser;
 		parser.setReader(this);
+
+		this.hashCode = calculateHashCode();
+	}
+
+	/**
+	 * 
+	 * @return The hash code.
+	 */
+	private int calculateHashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (parser == null ? 0 : parser.hashCode());
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof FileLineReader)) {
+			return false;
+		}
+		final FileLineReader<?, ?> other = (FileLineReader<?, ?>) obj;
+		if (parser == null) {
+			if (other.parser != null) {
+				return false;
+			}
+		} else if (!parser.equals(other.parser)) {
+			return false;
+		}
+		return true;
 	}
 
 	public final int getLineNumber() {
@@ -160,6 +205,16 @@ public class FileLineReader<L, F> {
 	 */
 	public final FileParser<L, F> getParser() {
 		return parser;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return hashCode;
 	}
 
 	/**
@@ -425,6 +480,22 @@ public class FileLineReader<L, F> {
 			final FilenameFilter filenameFilter) throws IOException,
 			ParseException {
 		return readPath(new File(inpath), filenameFilter);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		final StringBuilder builder = new StringBuilder();
+		final String className = this.getClass().getSimpleName();
+		builder.append(className);
+		builder.append("[parser=");
+		builder.append(parser);
+		builder.append("]");
+		return builder.toString();
 	}
 
 }
