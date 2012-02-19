@@ -161,6 +161,19 @@ public class FileLineReader<L, F> {
 		return result;
 	}
 
+	/**
+	 * Closes {@link FileLineReader#reader} while suppressing any thrown
+	 * {@link IOException} exceptions.
+	 */
+	private void close() {
+		if (reader != null) {
+			try {
+				reader.close();
+			} catch (final IOException e) {
+			}
+		}
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -186,6 +199,17 @@ public class FileLineReader<L, F> {
 			return false;
 		}
 		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#finalize()
+	 */
+	@Override
+	protected void finalize() throws Throwable {
+		super.finalize();
+		close();
 	}
 
 	public final int getLineNumber() {
