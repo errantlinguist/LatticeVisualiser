@@ -31,6 +31,12 @@ package com.github.errantlinguist.latticevisualiser;
 public class Edge implements Comparable<Edge> {
 
 	/**
+	 * A constant value used for estimating the length of the string
+	 * representation of the object returned by {@link #toSimpleString()}.
+	 */
+	protected static final int ESTIMATED_SIMPLE_STRING_LENGTH = 48;
+
+	/**
 	 * The edge transition end state ID.
 	 */
 	private final Integer endStateID;
@@ -76,31 +82,12 @@ public class Edge implements Comparable<Edge> {
 
 		this.startStateID = startStateID;
 		this.endStateID = endStateID;
-		
+
 		this.outputSymbol = outputSymbol;
 		this.weight = weight;
 
 		hashCode = calculateHashCode();
 
-	}
-
-	/**
-	 * 
-	 * @return The hash code.
-	 */
-	private int calculateHashCode() {
-		int result = 1;
-		final int prime = 31;
-		result = prime * result
-				+ (endStateID == null ? 0 : endStateID.hashCode());
-		result = prime * result
-				+ (outputSymbol == null ? 0 : outputSymbol.hashCode());
-		// long temp;
-		// temp = Double.doubleToLongBits(weight);
-		// result = HASH_PRIME * result + (int) (temp ^ temp >>> 32);
-		result = prime * result
-				+ (startStateID == null ? 0 : startStateID.hashCode());
-		return result;
 	}
 
 	@Override
@@ -198,7 +185,8 @@ public class Edge implements Comparable<Edge> {
 	 */
 	@Override
 	public String toString() {
-		final StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder(
+				ESTIMATED_SIMPLE_STRING_LENGTH);
 		final String className = this.getClass().getSimpleName();
 		builder.append(className);
 		builder.append("[startStateID=");
@@ -211,6 +199,25 @@ public class Edge implements Comparable<Edge> {
 		builder.append(weight);
 		builder.append("]");
 		return builder.toString();
+	}
+
+	/**
+	 * 
+	 * @return The hash code.
+	 */
+	private int calculateHashCode() {
+		int result = 1;
+		final int prime = 31;
+		result = prime * result
+				+ (endStateID == null ? 0 : endStateID.hashCode());
+		result = prime * result
+				+ (outputSymbol == null ? 0 : outputSymbol.hashCode());
+		// long temp;
+		// temp = Double.doubleToLongBits(weight);
+		// result = HASH_PRIME * result + (int) (temp ^ temp >>> 32);
+		result = prime * result
+				+ (startStateID == null ? 0 : startStateID.hashCode());
+		return result;
 	}
 
 }

@@ -47,6 +47,12 @@ import com.github.errantlinguist.parsers.ParseException;
 public class FileLineReader<L, F> {
 
 	/**
+	 * A constant value used for estimating the length of the string
+	 * representation of the object returned by {@link #toString()}.
+	 */
+	private static final int ESTIMATED_STRING_LENGTH = 64;
+
+	/**
 	 * A simple heuristic to guess the number of directories in a directory
 	 * tree.
 	 * 
@@ -150,30 +156,6 @@ public class FileLineReader<L, F> {
 		this.hashCode = calculateHashCode();
 	}
 
-	/**
-	 * 
-	 * @return The hash code.
-	 */
-	private int calculateHashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (parser == null ? 0 : parser.hashCode());
-		return result;
-	}
-
-	/**
-	 * Closes {@link FileLineReader#reader} while suppressing any thrown
-	 * {@link IOException} exceptions.
-	 */
-	private void close() {
-		if (reader != null) {
-			try {
-				reader.close();
-			} catch (final IOException e) {
-			}
-		}
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -199,17 +181,6 @@ public class FileLineReader<L, F> {
 			return false;
 		}
 		return true;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#finalize()
-	 */
-	@Override
-	protected void finalize() throws Throwable {
-		super.finalize();
-		close();
 	}
 
 	public final int getLineNumber() {
@@ -513,13 +484,48 @@ public class FileLineReader<L, F> {
 	 */
 	@Override
 	public String toString() {
-		final StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder(ESTIMATED_STRING_LENGTH);
 		final String className = this.getClass().getSimpleName();
 		builder.append(className);
 		builder.append("[parser=");
 		builder.append(parser);
 		builder.append("]");
 		return builder.toString();
+	}
+
+	/**
+	 * 
+	 * @return The hash code.
+	 */
+	private int calculateHashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (parser == null ? 0 : parser.hashCode());
+		return result;
+	}
+
+	/**
+	 * Closes {@link FileLineReader#reader} while suppressing any thrown
+	 * {@link IOException} exceptions.
+	 */
+	private void close() {
+		if (reader != null) {
+			try {
+				reader.close();
+			} catch (final IOException e) {
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#finalize()
+	 */
+	@Override
+	protected void finalize() throws Throwable {
+		super.finalize();
+		close();
 	}
 
 }

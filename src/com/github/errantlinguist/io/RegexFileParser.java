@@ -44,14 +44,10 @@ public abstract class RegexFileParser<L, F> extends FileParser<L, F> {
 	private static final Pattern EMPTY_LINE_PATTERN = Pattern.compile("\\s*");
 
 	/**
-	 * The line currently being parsed.
+	 * A constant value used for estimating the length of the string
+	 * representation of the object returned by {@link #toString()}.
 	 */
-	protected String currentLine;
-
-	/**
-	 * The parsed value corresponding to {@link #currentLine}.
-	 */
-	protected L currentValue;
+	private static final int ESTIMATED_STRING_LENGTH = 64;
 
 	/**
 	 * The pre-cached hash code.
@@ -64,15 +60,25 @@ public abstract class RegexFileParser<L, F> extends FileParser<L, F> {
 	private String lastMatched;
 
 	/**
+	 * The {@link Pattern} to be used for parsing each line.
+	 */
+	private final Pattern linePattern;
+
+	/**
+	 * The line currently being parsed.
+	 */
+	protected String currentLine;
+
+	/**
+	 * The parsed value corresponding to {@link #currentLine}.
+	 */
+	protected L currentValue;
+
+	/**
 	 * The last {@link Matcher} object used to parse a line, corresponding to
 	 * {@link #lastMatched}.
 	 */
 	protected Matcher lastMatcher;
-
-	/**
-	 * The {@link Pattern} to be used for parsing each line.
-	 */
-	private final Pattern linePattern;
 
 	/**
 	 * 
@@ -83,18 +89,6 @@ public abstract class RegexFileParser<L, F> extends FileParser<L, F> {
 		this.linePattern = linePattern;
 
 		this.hashCode = calculateHashCode();
-	}
-
-	/**
-	 * 
-	 * @return The hash code.
-	 */
-	private int calculateHashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result
-				+ (linePattern == null ? 0 : linePattern.hashCode());
-		return result;
 	}
 
 	/*
@@ -124,30 +118,6 @@ public abstract class RegexFileParser<L, F> extends FileParser<L, F> {
 		return true;
 	}
 
-	/**
-	 * A function used to handle a regular expression match.
-	 * 
-	 * @throws ParseException
-	 *             If there was an error while handling a regular expression
-	 *             parsing match.
-	 */
-	protected abstract void handleMatch() throws ParseException;
-
-	/**
-	 * A function used to handle a regular expression mismatch.
-	 * 
-	 * @throws ParseException
-	 *             If there was an error while handling a regular expression
-	 *             parsing match.
-	 */
-	protected void handleMismatch() throws ParseException {
-		if (!EMPTY_LINE_PATTERN.matcher(currentLine).matches()) {
-			final FileParseException newException = createFileParseException("File format error: "
-					+ currentLine);
-			throw newException;
-		}
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -165,18 +135,6 @@ public abstract class RegexFileParser<L, F> extends FileParser<L, F> {
 		}
 
 		return lastMatcher.matches();
-	}
-
-	/**
-	 * Matches a line against {@link #linePattern}.
-	 * 
-	 * @param line
-	 *            The line to match.
-	 */
-	private final void match(final String line) {
-		lastMatcher = linePattern.matcher(line);
-		lastMatched = line;
-
 	}
 
 	@Override
@@ -205,12 +163,6 @@ public abstract class RegexFileParser<L, F> extends FileParser<L, F> {
 
 	}
 
-	/**
-	 * An abstract method for specifying the specific actions to be taken to
-	 * reset the {@link RegexFileParser} when calling {@link #reset()}.
-	 */
-	protected abstract void resetParse();
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -218,7 +170,7 @@ public abstract class RegexFileParser<L, F> extends FileParser<L, F> {
 	 */
 	@Override
 	public String toString() {
-		final StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder(ESTIMATED_STRING_LENGTH);
 		final String className = this.getClass().getSimpleName();
 		builder.append(className);
 		builder.append("[linePattern=");
@@ -226,5 +178,59 @@ public abstract class RegexFileParser<L, F> extends FileParser<L, F> {
 		builder.append("]");
 		return builder.toString();
 	}
+
+	/**
+	 * 
+	 * @return The hash code.
+	 */
+	private int calculateHashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result
+				+ (linePattern == null ? 0 : linePattern.hashCode());
+		return result;
+	}
+
+	/**
+	 * Matches a line against {@link #linePattern}.
+	 * 
+	 * @param line
+	 *            The line to match.
+	 */
+	private final void match(final String line) {
+		lastMatcher = linePattern.matcher(line);
+		lastMatched = line;
+
+	}
+
+	/**
+	 * A function used to handle a regular expression match.
+	 * 
+	 * @throws ParseException
+	 *             If there was an error while handling a regular expression
+	 *             parsing match.
+	 */
+	protected abstract void handleMatch() throws ParseException;
+
+	/**
+	 * A function used to handle a regular expression mismatch.
+	 * 
+	 * @throws ParseException
+	 *             If there was an error while handling a regular expression
+	 *             parsing match.
+	 */
+	protected void handleMismatch() throws ParseException {
+		if (!EMPTY_LINE_PATTERN.matcher(currentLine).matches()) {
+			final FileParseException newException = createFileParseException("File format error: "
+					+ currentLine);
+			throw newException;
+		}
+	}
+
+	/**
+	 * An abstract method for specifying the specific actions to be taken to
+	 * reset the {@link RegexFileParser} when calling {@link #reset()}.
+	 */
+	protected abstract void resetParse();
 
 }

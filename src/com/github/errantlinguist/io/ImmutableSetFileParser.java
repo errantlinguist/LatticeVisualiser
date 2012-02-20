@@ -173,7 +173,7 @@ public class ImmutableSetFileParser<O> extends FileParser<O, ImmutableSet<O>> {
 	 */
 	@Override
 	public String toString() {
-		final StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder(ESTIMATED_STRING_LENGTH);
 		final String className = this.getClass().getSimpleName();
 		builder.append(className);
 		builder.append("[transformer=");

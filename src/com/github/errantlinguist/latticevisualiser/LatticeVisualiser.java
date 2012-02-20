@@ -56,42 +56,10 @@ import edu.uci.ics.jung.visualization.VisualizationImageServer;
 public class LatticeVisualiser implements Settings, SysExits {
 
 	/**
-	 * 
-	 * @return A new {@link FileLineReader} for reading lattice files.
+	 * A constant value used for estimating the length of the string
+	 * representation of the object returned by {@link #toSimpleString()}.
 	 */
-	private static FileLineReader<Edge, DirectedSparseGraph<Integer, Edge>> createFileReader() {
-		final Transformer<String, String> stringLowerCaseTransformer = StringLowerCaseTransformer
-				.getInstance();
-		final LatticeFileParser fileParser = new LatticeFileParser(
-				stringLowerCaseTransformer);
-		final FileLineReader<Edge, DirectedSparseGraph<Integer, Edge>> fileReader = fileParser
-				.createFileReader();
-		return fileReader;
-	}
-
-	/**
-	 * Returns the maximum count of outgoing edges for a single vertex.
-	 * 
-	 * @param graph
-	 *            The {@link Graph} to get the maximum outgoing edge count for.
-	 * @param <V>
-	 *            The {@code Graph} vertex type.
-	 * @param <E>
-	 *            The {@code Graph} edge type.
-	 * @return The maximum count of outgoing edges for a single vertex.
-	 */
-	private static <V, E> int getMaxOutEdges(final Graph<V, E> graph) {
-		final Collection<V> vertices = graph.getVertices();
-		int max = 0;
-		for (final V vertex : vertices) {
-			final int outEdgeCount = graph.getOutEdges(vertex).size();
-			if (outEdgeCount > max) {
-				max = outEdgeCount;
-			}
-		}
-
-		return max;
-	}
+	protected static final int ESTIMATED_SIMPLE_STRING_LENGTH = 512;
 
 	/**
 	 * Parses command-line arguments for input file, window width and height,
@@ -154,6 +122,44 @@ public class LatticeVisualiser implements Settings, SysExits {
 		visualizer.show();
 
 		printInfo(latticeGraph);
+	}
+
+	/**
+	 * 
+	 * @return A new {@link FileLineReader} for reading lattice files.
+	 */
+	private static FileLineReader<Edge, DirectedSparseGraph<Integer, Edge>> createFileReader() {
+		final Transformer<String, String> stringLowerCaseTransformer = StringLowerCaseTransformer
+				.getInstance();
+		final LatticeFileParser fileParser = new LatticeFileParser(
+				stringLowerCaseTransformer);
+		final FileLineReader<Edge, DirectedSparseGraph<Integer, Edge>> fileReader = fileParser
+				.createFileReader();
+		return fileReader;
+	}
+
+	/**
+	 * Returns the maximum count of outgoing edges for a single vertex.
+	 * 
+	 * @param graph
+	 *            The {@link Graph} to get the maximum outgoing edge count for.
+	 * @param <V>
+	 *            The {@code Graph} vertex type.
+	 * @param <E>
+	 *            The {@code Graph} edge type.
+	 * @return The maximum count of outgoing edges for a single vertex.
+	 */
+	private static <V, E> int getMaxOutEdges(final Graph<V, E> graph) {
+		final Collection<V> vertices = graph.getVertices();
+		int max = 0;
+		for (final V vertex : vertices) {
+			final int outEdgeCount = graph.getOutEdges(vertex).size();
+			if (outEdgeCount > max) {
+				max = outEdgeCount;
+			}
+		}
+
+		return max;
 	}
 
 	/**
@@ -302,42 +308,6 @@ public class LatticeVisualiser implements Settings, SysExits {
 				stateSizeTransformer);
 		statePaintTransformer = new StatePaintTransformer(graph);
 
-	}
-
-	/**
-	 * Creates a new {@link VisualizationImageServer} using a given
-	 * {@link Layout} and the {@link LatticeVisualiser} settings.
-	 * 
-	 * @param layout
-	 *            The <code>Layout</code> to use.
-	 * @return A new {@code VisualizationImageServer}.
-	 */
-	private VisualizationImageServer<Integer, Edge> createVisualizationServer(
-			final Layout<Integer, Edge> layout) {
-		// The BasicVisualizationServer<Integer,Edge> is parameterised by
-		// the vertex and edge types
-		final VisualizationImageServer<Integer, Edge> visualizationServer = new VisualizationImageServer<Integer, Edge>(
-				layout, windowDimension);
-		visualizationServer.setPreferredSize(windowDimension);
-
-		final RenderContext<Integer, Edge> renderContext = visualizationServer
-				.getRenderContext();
-		renderContext.setVertexFillPaintTransformer(statePaintTransformer);
-		renderContext.setEdgeStrokeTransformer(new EdgeStrokeTransformer(
-				nonwords));
-		renderContext.setEdgeLabelTransformer(EDGE_LABEL_TRANSFORMER);
-		renderContext.setEdgeFontTransformer(new EdgeFontTransformer(nonwords));
-
-		renderContext.setVertexShapeTransformer(stateShapeTransformer);
-		renderContext.setVertexLabelTransformer(STATE_LABEL_TRANSFORMER);
-		final StateFontTransformer stateFontTransformer = new StateFontTransformer(
-				graph, nonwords);
-		renderContext.setVertexFontTransformer(stateFontTransformer);
-
-		visualizationServer.getRenderer().getVertexLabelRenderer()
-				.setPosition(STATE_LABEL_POSITION);
-		visualizationServer.setBackground(BACKGROUND_COLOUR);
-		return visualizationServer;
 	}
 
 	/*
@@ -513,6 +483,61 @@ public class LatticeVisualiser implements Settings, SysExits {
 		this.windowDimension = windowDimension;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		final StringBuilder builder = new StringBuilder(
+				ESTIMATED_SIMPLE_STRING_LENGTH);
+		final String className = this.getClass().getSimpleName();
+		builder.append(className);
+		builder.append("[graph=");
+		builder.append(graph);
+		builder.append("nonwords=");
+		builder.append(nonwords);
+		builder.append("]");
+		return builder.toString();
+	}
+
+	/**
+	 * Creates a new {@link VisualizationImageServer} using a given
+	 * {@link Layout} and the {@link LatticeVisualiser} settings.
+	 * 
+	 * @param layout
+	 *            The <code>Layout</code> to use.
+	 * @return A new {@code VisualizationImageServer}.
+	 */
+	private VisualizationImageServer<Integer, Edge> createVisualizationServer(
+			final Layout<Integer, Edge> layout) {
+		// The BasicVisualizationServer<Integer,Edge> is parameterised by
+		// the vertex and edge types
+		final VisualizationImageServer<Integer, Edge> visualizationServer = new VisualizationImageServer<Integer, Edge>(
+				layout, windowDimension);
+		visualizationServer.setPreferredSize(windowDimension);
+
+		final RenderContext<Integer, Edge> renderContext = visualizationServer
+				.getRenderContext();
+		renderContext.setVertexFillPaintTransformer(statePaintTransformer);
+		renderContext.setEdgeStrokeTransformer(new EdgeStrokeTransformer(
+				nonwords));
+		renderContext.setEdgeLabelTransformer(EDGE_LABEL_TRANSFORMER);
+		renderContext.setEdgeFontTransformer(new EdgeFontTransformer(nonwords));
+
+		renderContext.setVertexShapeTransformer(stateShapeTransformer);
+		renderContext.setVertexLabelTransformer(STATE_LABEL_TRANSFORMER);
+		final StateFontTransformer stateFontTransformer = new StateFontTransformer(
+				graph, nonwords);
+		renderContext.setVertexFontTransformer(stateFontTransformer);
+
+		visualizationServer.getRenderer().getVertexLabelRenderer()
+				.setPosition(STATE_LABEL_POSITION);
+		visualizationServer.setBackground(BACKGROUND_COLOUR);
+		return visualizationServer;
+	}
+
 	/**
 	 * Displays {@link #frame} on-screen in a window.
 	 */
@@ -524,24 +549,6 @@ public class LatticeVisualiser implements Settings, SysExits {
 		frame.getContentPane().add(visualizationServer);
 		frame.pack();
 		frame.setVisible(true);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		final StringBuilder builder = new StringBuilder();
-		final String className = this.getClass().getSimpleName();
-		builder.append(className);
-		builder.append("[graph=");
-		builder.append(graph);
-		builder.append("nonwords=");
-		builder.append(nonwords);
-		builder.append("]");
-		return builder.toString();
 	}
 
 	/**

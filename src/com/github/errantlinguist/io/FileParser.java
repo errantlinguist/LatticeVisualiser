@@ -34,17 +34,59 @@ import com.github.errantlinguist.parsers.Parser;
  */
 public abstract class FileParser<L, F> extends Parser<String, L, F> {
 
+	// /**
+	// * Returns the standard string representation in the style of
+	// * {@link Object#toString()}.
+	// *
+	// * @param obj
+	// * The {@link Object} to get the string representation of.
+	// * @return The string representation in the style of
+	// * {@link Object#toString()}.
+	// */
+	// private static final <T> String getObjectString(final T obj) {
+	// final StringBuilder builder = new StringBuilder();
+	//
+	// return getObjectString(obj, builder);
+	// }
+
+	/**
+	 * A constant value used for estimating the length of the string
+	 * representation of the object returned by {@link #toString()}.
+	 */
+	protected static final int ESTIMATED_STRING_LENGTH = 64;
+
 	/**
 	 * Returns the standard string representation in the style of
 	 * {@link Object#toString()}.
 	 * 
 	 * @param obj
 	 *            The {@link Object} to get the string representation of.
+	 * @param estimatedLength
+	 *            A value used for estimating the length of the string
+	 *            representation of the object returned by {@link #toString()}.
 	 * @return The string representation in the style of
 	 *         {@link Object#toString()}.
 	 */
-	private static final <T> String getObjectString(final T obj) {
-		final StringBuilder builder = new StringBuilder();
+	private static final <T> String getObjectString(final T obj,
+			final int estimatedLength) {
+		final StringBuilder builder = new StringBuilder(estimatedLength);
+		return getObjectString(obj, builder);
+	}
+
+	/**
+	 * Returns the standard string representation in the style of
+	 * {@link Object#toString()}.
+	 * 
+	 * @param obj
+	 *            The {@link Object} to get the string representation of.
+	 * @param builder
+	 *            The {@link StringBuilder} used for creating the
+	 *            representation.
+	 * @return The string representation in the style of
+	 *         {@link Object#toString()}.
+	 */
+	private static final <T> String getObjectString(final T obj,
+			final StringBuilder builder) {
 		final String className = obj.getClass().getName();
 		builder.append(className);
 		builder.append('@');
@@ -57,12 +99,30 @@ public abstract class FileParser<L, F> extends Parser<String, L, F> {
 	private FileLineReader<L, F> reader;
 
 	/**
+	 * 
+	 * @return A new {@link FileLineReader} using the {@link FileParser}.
+	 */
+	public FileLineReader<L, F> createFileReader() {
+		return new FileLineReader<L, F>(this);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return getObjectString(this, ESTIMATED_STRING_LENGTH);
+	}
+
+	/**
 	 * Makes a new {@link FileParseException} with the current line number, if
 	 * any.
 	 * 
 	 * @return A new <code>FileParseException</code> object.
 	 */
-	protected FileParseException createFileParseException() {
+	protected final FileParseException createFileParseException() {
 
 		final FileParseException newException;
 		if (reader != null) {
@@ -83,7 +143,8 @@ public abstract class FileParser<L, F> extends Parser<String, L, F> {
 	 *            The cause.
 	 * @return A new <code>FileParseException</code> object.
 	 */
-	protected FileParseException createFileParseException(final Exception cause) {
+	protected final FileParseException createFileParseException(
+			final Exception cause) {
 
 		final FileParseException newException;
 		if (reader != null) {
@@ -104,7 +165,8 @@ public abstract class FileParser<L, F> extends Parser<String, L, F> {
 	 *            The message.
 	 * @return A new <code>FileParseException</code> object.
 	 */
-	protected FileParseException createFileParseException(final String message) {
+	protected final FileParseException createFileParseException(
+			final String message) {
 
 		final FileParseException newException;
 		if (reader != null) {
@@ -127,8 +189,8 @@ public abstract class FileParser<L, F> extends Parser<String, L, F> {
 	 *            The cause.
 	 * @return A new <code>FileParseException</code> object.
 	 */
-	protected FileParseException createFileParseException(final String message,
-			final Exception cause) {
+	protected final FileParseException createFileParseException(
+			final String message, final Exception cause) {
 
 		final FileParseException newException;
 		if (reader != null) {
@@ -144,29 +206,11 @@ public abstract class FileParser<L, F> extends Parser<String, L, F> {
 
 	/**
 	 * 
-	 * @return A new {@link FileLineReader} using the {@link FileParser}.
-	 */
-	public FileLineReader<L, F> createFileReader() {
-		return new FileLineReader<L, F>(this);
-	}
-
-	/**
-	 * 
 	 * @param reader
 	 *            the reader
 	 */
 	protected void setReader(final FileLineReader<L, F> reader) {
 		this.reader = reader;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return getObjectString(this);
 	}
 
 }

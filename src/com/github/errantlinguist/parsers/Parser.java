@@ -51,6 +51,12 @@ import java.util.Map;
 public abstract class Parser<I, OS, OC> {
 
 	/**
+	 * A constant value used for estimating the length of the string
+	 * representation of the object returned by {@link #toString()}.
+	 */
+	private static final int ESTIMATED_STRING_LENGTH = 32;
+
+	/**
 	 * Get the underlying class for a type, or null if the type is a variable
 	 * type.
 	 * 
@@ -61,7 +67,7 @@ public abstract class Parser<I, OS, OC> {
 	 *            the type
 	 * @return the underlying class
 	 */
-	public static final Class<?> getClass(final Type type) {
+	private static final Class<?> getClass(final Type type) {
 		if (type instanceof Class<?>) {
 			return (Class<?>) type;
 		} else if (type instanceof ParameterizedType) {
@@ -93,7 +99,7 @@ public abstract class Parser<I, OS, OC> {
 	 *            the child class
 	 * @return a list of the raw classes for the actual type arguments.
 	 */
-	public static final <T> List<Class<?>> getTypeArguments(
+	private static final <T> List<Class<?>> getTypeArguments(
 			final Class<T> baseClass, final Class<? extends T> childClass) {
 		final Map<Type, Type> resolvedTypes = new HashMap<Type, Type>();
 		Type type = childClass;
@@ -168,21 +174,6 @@ public abstract class Parser<I, OS, OC> {
 		this.complexParseClass = typeArgs.get(2);
 
 		this.hashCode = calculateHashCode();
-	}
-
-	/**
-	 * 
-	 * @return The hash code.
-	 */
-	private int calculateHashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime
-				* result
-				+ (complexParseClass == null ? 0 : complexParseClass.hashCode());
-		result = prime * result
-				+ (simpleParseClass == null ? 0 : simpleParseClass.hashCode());
-		return result;
 	}
 
 	/**
@@ -386,7 +377,7 @@ public abstract class Parser<I, OS, OC> {
 	 */
 	@Override
 	public String toString() {
-		final StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder(ESTIMATED_STRING_LENGTH);
 		final String className = this.getClass().getSimpleName();
 		builder.append(className);
 		builder.append("[complexParseClass=");
@@ -395,6 +386,21 @@ public abstract class Parser<I, OS, OC> {
 		builder.append(simpleParseClass);
 		builder.append("]");
 		return builder.toString();
+	}
+
+	/**
+	 * 
+	 * @return The hash code.
+	 */
+	private int calculateHashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime
+				* result
+				+ (complexParseClass == null ? 0 : complexParseClass.hashCode());
+		result = prime * result
+				+ (simpleParseClass == null ? 0 : simpleParseClass.hashCode());
+		return result;
 	}
 
 }
