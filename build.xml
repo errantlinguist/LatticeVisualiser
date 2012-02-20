@@ -24,8 +24,6 @@ LICENSING:
 Copyright 2011-2012 Todd Shore. Distributed under the Apache License 2.0: See the files "NOTICE" and "LICENSE".
 -->
 <project basedir="." default="build" name="LatticeVisualiser">
-
-	<property file="default.properties"/>
 	
 	<target name="makeclasspath" description="makes a classpath for the Java VM/compiler">
 		<!-- <echo message="externaljars: ${externaljars}"/> -->
@@ -35,7 +33,9 @@ Copyright 2011-2012 Todd Shore. Distributed under the Apache License 2.0: See th
 		</path>
 	</target>
  
-	<target name="init" depends="makeclasspath" description="Sets up the initial environment" />
+	<target name="init" description="Sets up the initial environment" >
+		<property file="default.properties"/>	
+	</target>
 	
 	<target name="init.build" depends="init" description="Sets up the initial build environment">
 		<mkdir dir="${classes.dir}"/>
