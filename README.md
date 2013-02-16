@@ -25,7 +25,7 @@ Instructions
 
 		ant -Dexternaljars="/usr/share/java/guava.jar:/usr/share/java/commons-cli.jar:lib/collections-generic-4.01.jar:lib/jung-algorithms-2.0.1.jar:lib/jung-graph-impl-2.0.1.jar:lib/jung-visualization-2.0.1.jar"
 
-for a Debian/Ubuntu-style system where the JUNG libraries are locally installed under the directory `./lib`.
+	for a Debian/Ubuntu-style system where the JUNG libraries are locally installed under the directory `./lib`.
 - **Running a demo:** Run `ant demo` with required classpath, e.g.
 
 		ant demo -Dexternaljars="/usr/share/java/guava.jar:/usr/share/java/commons-cli.jar:lib/collections-generic-4.01.jar:lib/jung-algorithms-2.0.1.jar:lib/jung-graph-impl-2.0.1.jar:lib/jung-visualization-2.0.1.jar".
