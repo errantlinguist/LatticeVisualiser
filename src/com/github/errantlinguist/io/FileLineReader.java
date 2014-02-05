@@ -81,8 +81,8 @@ public class FileLineReader<L, F> {
 		final Deque<File> dirsToExpand = new ArrayDeque<File>(initialSize);
 		dirsToExpand.add(indir);
 		while (!dirsToExpand.isEmpty()) {
-
-			final File[] dirContents = indir.listFiles();
+			final File dirToExpand = dirsToExpand.remove();
+			final File[] dirContents = dirToExpand.listFiles();
 			for (final File file : dirContents) {
 				if (file.isFile()) {
 					recursiveContents.add(file);
@@ -114,8 +114,8 @@ public class FileLineReader<L, F> {
 		final Deque<File> dirsToExpand = new ArrayDeque<File>(initialSize);
 		dirsToExpand.add(indir);
 		while (!dirsToExpand.isEmpty()) {
-
-			final File[] dirContents = indir.listFiles(filenameFilter);
+			final File dirToExpand = dirsToExpand.remove();
+			final File[] dirContents = dirToExpand.listFiles(filenameFilter);
 			for (final File file : dirContents) {
 				if (file.isFile()) {
 					recursiveContents.add(file);
