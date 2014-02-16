@@ -23,9 +23,10 @@ WEBSITE: https://github.com/errantlinguist/LatticeVisualiser
 LICENSING:
 Copyright 2011-2012 Todd Shore. Distributed under the Apache License 2.0: See the files "NOTICE" and "LICENSE".
 -->
-<project basedir="." default="build" name="LatticeVisualiser">
+<project basedir="." default="default" name="LatticeVisualiser">
 	
-	<target name="makeclasspath" description="makes a classpath for the Java VM/compiler">
+	<target name="classpath" depends="init">
+		<!-- makes a classpath for the Java VM/compiler -->
 		<!-- <echo message="externaljars: ${externaljars}"/> -->
 		<path id="classpath">
 			<pathelement location="${classes.dir}"/>
@@ -33,45 +34,39 @@ Copyright 2011-2012 Todd Shore. Distributed under the Apache License 2.0: See th
 		</path>
 	</target>
  
-	<target name="init" description="Sets up the initial environment" >
+	<target name="init">
+		<!-- Sets up the initial environment -->
 		<property file="default.properties"/>	
 	</target>
 	
-	<target name="init.build" depends="init" description="Sets up the initial build environment">
+	<target name="init-build" depends="init">
+		<!-- Sets up the initial build environment -->
 		<mkdir dir="${classes.dir}"/>
-		<copy includeemptydirs="false" todir="${classes.dir}">
-			<fileset dir="${source.dir}">
-				<exclude name="**/*.java"/>
-			</fileset>
-		</copy>	
 	</target>
     
-	<target name="clean" description="Removes class files">
+	<target name="clean-build" description="Removes class files">
 		<delete dir="${classes.dir}"/>
 	</target>
 	
-	<target name="cleanjars" description="Removes all JAR files">
+	<target name="clean-jar" depends="init-jar" description="Removes all JAR files">
 		<delete dir="${jar.dir}" />	
 	</target>
 	
-	<target name="cleanmainjar" description="Removes the main JAR file (e.g. ${jar.main})">
-		<delete file="${jar.dir}/${jar.main}" />	
-	</target>
-    
-	<target name="cleanall" description="Removes class, JAR and Javadoc files" depends="clean,cleanjars,cleanjavadoc" />
+	<target name="clean" description="Removes class, JAR and Javadoc files" depends="clean-build,clean-jar,cleanjavadoc" />
 	
-	<target name="makejarmanifestclasspath" depends="makeclasspath">
+	<target name="makejarmanifestclasspath" depends="classpath">
 		<manifestclasspath property="jar.manifest.classpath" jarfile="${jar.dir}/${jar.main}">
 			<classpath refid="classpath" />
 		</manifestclasspath>
 	</target>
 	
-	<target name="init.jar" depends="init" description="Sets up the initial environment for creating JARs">
+	<target name="init-jar">
+		<!-- Sets up the initial environment for creating JARs -->
 		<property file="jar.properties"/>
 		<mkdir dir="${jar.dir}"/>
 	</target>
 	
-	<target name="jar" depends="build,init.jar,makejarmanifestclasspath" description="Jars the main code">
+	<target name="jar" depends="build,init-jar,makejarmanifestclasspath" description="Jars the main code">
 		<mkdir dir="${jar.dir}"/>
 		<echo message="Classpath for JAR manifest: ${jar.manifest.classpath}"/>
 		<jar destfile="${jar.dir}/${jar.main}" compress="true">
@@ -94,17 +89,19 @@ Copyright 2011-2012 Todd Shore. Distributed under the Apache License 2.0: See th
 		</jar>
 	</target>
     
-	<target depends="init.build" name="build" description="Builds the LatticeVisualiser Java application">
+	<target name="build" depends="init-build,classpath" description="Builds the LatticeVisualiser Java application">
 		<echo message="${ant.project.name}: ${ant.file}"/>
 		<echo message="Classpath: ${toString:classpath}"/>
 		
 		<!-- <echo message="Writing classpath to file: ${classpath.file}" />
 		<echo message="build.classpath = ${toString:classpath}" file="classpath.properties" /> -->
 		
-		<javac includeantruntime="false" debug="true" debuglevel="${javac.debuglevel}" destdir="${classes.dir}" source="${sourceVersion}" target="${targetVersion}" classpathref="classpath" optimize="${javac.optimize}">
+		<javac includeantruntime="false" debug="true" debuglevel="${debuglevel}" destdir="${classes.dir}" source="${sourceVersion}" target="${targetVersion}" classpathref="classpath" optimize="${javac.optimize}">
 			<src path="${source.dir}"/>
 		</javac>
 	</target>
+	
+	<target name="default" depends="build" description="Run the default project task." />
     
 	<target name="demo" depends="build" description="Runs a demonstration of the LatticeVisualiser application">
 		<!-- <property file="classpath.properties"/> -->
@@ -113,11 +110,12 @@ Copyright 2011-2012 Todd Shore. Distributed under the Apache License 2.0: See th
 		</java>
 	</target>
 	
-	<target name="init.javadoc" depends="init" description="Sets up the initial environment for creating a Javadoc">
+	<target name="init-javadocs" depends="init">
+		<!-- Sets up the initial environment for creating a Javadoc -->
 		<property file="javadoc.properties"/>
 	</target>
 	
-	<target name="javadoc" depends="init.javadoc">
+	<target name="javadocs" depends="init-javadocs" description="Creates a Javadoc for the project source code.">
 		<echo message="${ant.project.name}: ${ant.file}"/>
 		<!-- <echo message="Classpath: ${toString:classpath}"/> -->
 		<javadoc access="${javadoc.access}" author="${javadoc.true}" classpathref="classpath" destdir="${javadoc.dir}" nodeprecated="${javadoc.nodeprecated}" nodeprecatedlist="${javadoc.nodeprecatedlist}" noindex="${javadoc.false}" nonavbar="${javadoc.nonavbar}" notree="${javadoc.notree}" packagenames="${javadoc.packagenames}" source="${sourceVersion}" sourcepath="${source.dir}" splitindex="${javadoc.splitindex}" use="${javadoc.use}" version="true">
@@ -129,7 +127,7 @@ Copyright 2011-2012 Todd Shore. Distributed under the Apache License 2.0: See th
 		</javadoc>
     	</target>
     	
-    	<target name="cleanjavadoc" depends="init.javadoc" description="Removes Javadoc files">
+    	<target name="cleanjavadoc" depends="init-javadocs" description="Removes Javadoc files">
 		<delete dir="${javadoc.dir}"/>
 	</target>
     
