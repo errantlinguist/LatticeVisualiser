@@ -1,6 +1,6 @@
 Millennium ASR Lattice Visualiser
 ================================================================================
-A visualisation tool for word/phone lattices output by the [Millennium ASR system](http://www.distant-speech-recognition.org/).
+A visualisation tool for word/phone lattices output by the [Millennium ASR system](http://distantspeechrecognition.sourceforge.net/).
 
 * **Version:** 2011-11-28
 * **Author:** Todd Shore
