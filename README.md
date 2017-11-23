@@ -5,7 +5,7 @@ A visualisation tool for word/phone lattices output by the [Millennium ASR syste
 * **Version:** 2011-11-28
 * **Author:** Todd Shore
 * **Website:** https://github.com/errantlinguist/LatticeVisualiser
-* **Licensing:** Copyright 2011--2012 Todd Shore. Licensed for distribution under the Apache License 2.0: See the files `NOTICE.txt` and `LICENSE.txt`.
+* **Licensing:** Copyright 2011&ndash;2012 Todd Shore. Licensed for distribution under the Apache License 2.0: See the files `NOTICE.txt` and `LICENSE.txt`.
 
 Requirements
 --------------------------------------------------------------------------------
